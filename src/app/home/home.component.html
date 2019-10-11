@@ -1,0 +1,21 @@
+<!-- <p>home works!</p> -->
+
+<div class="example-container">
+    <mat-form-field>
+      <input matInput placeholder="Receipe name" [formControl]="itemName" required>
+      <mat-error *ngIf="itemName.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+
+    <label class="error">{{errorMessage}}</label>
+
+   
+
+    <button mat-button color="primary" (click)="search()">Search</button>
+    <!-- <button mat-button color="secondary" routerLink='/register'>Don't have an account? Sign-up</button> -->
+
+    
+<mat-list role="list">
+    <mat-list-item *ngFor="let recipe of recipes" role="listitem">{{recipe.title}}</mat-list-item>
+</mat-list>
+</div>
+

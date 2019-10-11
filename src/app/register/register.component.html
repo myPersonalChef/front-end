@@ -1,0 +1,24 @@
+<p class="center">Sign-up</p>
+
+<div class="example-container">
+    <mat-form-field>
+      <input matInput placeholder="Full Name" [(ngModel)]="name">
+    </mat-form-field>
+  
+    <mat-form-field>
+        <input matInput placeholder="Email"  [formControl]="email" required>
+        <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+
+    <mat-form-field>
+    <input matInput placeholder="Password" [formControl]="password" required>
+    <mat-error *ngIf="password.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+
+    <label class="error">{{errorMessage}}</label>
+    <label class="success">{{successMessage}}</label>
+
+    <button mat-button color="primary" (click)="tryRegister()">Sign-up</button>
+    <button mat-button color="secondary" routerLink='/login'>Already have an account? Sign-in</button>
+
+  </div>
