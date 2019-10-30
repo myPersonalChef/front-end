@@ -16,9 +16,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
+import {  AngularFireDatabaseModule} from '@angular/fire/database';
 
 import { AuthService } from './core/auth.service';
 import { AppService } from './core/app.service';
+import { DataService } from './core/data.service';
 
 
 const firebase = {
@@ -47,9 +49,10 @@ const firebase = {
     AngularFireModule.initializeApp(firebase),
    AngularFirestoreModule,
    AngularFireAuthModule,
+   AngularFireDatabaseModule,
    HttpClientModule
   ],
-  providers: [AuthService, AppService],
+  providers: [AuthService, AppService, DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

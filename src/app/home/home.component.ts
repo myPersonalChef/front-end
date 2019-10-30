@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 
 import {  AppService} from '../core/app.service';
+import { DataService } from '../core/data.service';
 
 
 @Component({
@@ -17,7 +18,8 @@ export class HomeComponent implements OnInit {
 
   itemName = new FormControl('', [Validators.required]);
 
-  constructor(public service: AppService) { }
+  constructor(public service: AppService,
+    public dataSvc: DataService) { }
 
   ngOnInit() {
   }
@@ -26,8 +28,10 @@ export class HomeComponent implements OnInit {
     this.errorMessage = "";
     if(this.itemName.valid){
       console.log(this.itemName.value);
+      this.dataSvc.changeLoadingStatus('loading');
       // const searchedItem = 
       this.service.fetchRecipes(this.itemName.value).subscribe((data)=>{
+        this.dataSvc.changeLoadingStatus('noLoading');
         console.log(data.recipes);
         this.recipes = data.recipes;
         if(this.recipes.length === 0){

@@ -1,13 +1,17 @@
-<p class="center">Sign-in</p>
+<p class="center">Sign Into My Account</p>
 
 <div class="example-container">
+    <button mat-button color="primary" (click)="signInWithGoogleAccount()">Sign-in with Google</button>
+
+    <p class="center">OR</p>
+
     <mat-form-field>
       <input matInput placeholder="Email" [formControl]="email" required>
       <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
   
     <mat-form-field>
-        <input matInput placeholder="Password" [formControl]="password" required>
+        <input matInput placeholder="Password"  type="password" [formControl]="password" required>
         <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
 
@@ -16,5 +20,9 @@
 
     <button mat-button color="primary" (click)="tryLogin()">Sign-in</button>
     <button mat-button color="secondary" routerLink='/register'>Don't have an account? Sign-up</button>
+
+   
+
+
 
   </div>

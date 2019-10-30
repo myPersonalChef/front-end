@@ -1,24 +1,39 @@
-<p class="center">Sign-up</p>
+<p class="center" *ngIf="!service.isEditUserInfo()">Sign-up</p>
+<p class="center" *ngIf="service.isEditUserInfo()">Edit Profile</p>
 
 <div class="example-container">
     <mat-form-field>
-      <input matInput placeholder="Full Name" [(ngModel)]="name">
+        <input matInput placeholder="Full Name"  [formControl]="name" required>
+        <mat-error *ngIf="name.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
   
-    <mat-form-field>
+    <mat-form-field *ngIf="!service.isEditUserInfo()">
         <input matInput placeholder="Email"  [formControl]="email" required>
         <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
       </mat-form-field>
 
-    <mat-form-field>
-    <input matInput placeholder="Password" [formControl]="password" required>
-    <mat-error *ngIf="password.invalid">{{getErrorMessage()}}</mat-error>
+    <mat-form-field *ngIf="!service.isEditUserInfo()">
+      <input matInput placeholder="Password" type="password" [formControl]="password" required>
+      <mat-error *ngIf="password.invalid">{{getErrorMessage()}}</mat-error>
     </mat-form-field>
+
+    <mat-form-field>
+        <input matInput placeholder="Address"  [formControl]="address" required>
+        <mat-error *ngIf="address.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+
+    <mat-form-field>
+        <input matInput placeholder="Contact"  [formControl]="contact" required>
+        <mat-error *ngIf="contact.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+   
 
     <label class="error">{{errorMessage}}</label>
     <label class="success">{{successMessage}}</label>
 
-    <button mat-button color="primary" (click)="tryRegister()">Sign-up</button>
-    <button mat-button color="secondary" routerLink='/login'>Already have an account? Sign-in</button>
+    <button *ngIf="!service.isEditUserInfo()" mat-button color="primary" (click)="tryRegister()">Sign-up</button>
+    <button *ngIf="!service.isEditUserInfo()" mat-button color="secondary" routerLink='/login'>Already have an account? Sign-in</button>
+
+    <button *ngIf="service.isEditUserInfo()" mat-button color="primary" (click)="modifyDetails()">Update</button>
 
   </div>
