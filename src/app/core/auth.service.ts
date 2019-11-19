@@ -5,6 +5,8 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import * as firebase from 'firebase/app';
 
 import { User } from '../core/interfaces';
+import { resolve } from 'url';
+import { reject } from 'q';
 
 @Injectable()
 export class AuthService {
@@ -211,5 +213,74 @@ export class AuthService {
       });
     })
   }
+
+  /**
+   * create plans
+   */
+  createPlans(plans: any){
+    
+    //return new Promise<any>((resolve, reject) => {
+      plans.forEach((plan, index)=>{
+        this.db.database.ref('plans/' + index).set({
+          id: plan.id,
+          name: plan.name,
+          description: plan.description,
+          price: plan.price,
+          per_meal_info: plan.per_meal_info
+        })
+      })
+    }
+
+    /**
+     * create a subscription based on user
+     *
+     * Subscriptions
+        ------
+        Subscription ID
+        Client ID
+        Plan ID
+        Subscription_start_timestamp
+        Subscription_end_timestamp
+     */
+    addSubscription(planId: any, startDate: any, endDate: any){
+      const userId = firebase.auth().currentUser.uid;
+      return new Promise<any>((resolve, reject) => {
+        this.db.database.ref('subscription/' + userId).set({
+          subscription_id: userId,
+          user_id: userId,
+          plan_id: planId,
+          subscription_start_timestamp: startDate,
+          subscription_end_timestamp: endDate
+        }).then((data) => {
+          resolve(data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+      });
+    }
+
+    /**
+     * 
+     * @param userId 
+     * checks if the user is subscribed
+     *
+     */
+    isSubscribed(userId: string){
+      return new Promise<any>((resolve, reject) => {
+        const userRef = this.db.database.ref('subscription');
+        userRef.on('value', (snapshot) =>{
+          snapshot.forEach((childSnapshot) => {
+            console.log(childSnapshot);
+            if(childSnapshot.key === userId){
+              resolve(true);
+            }
+          });
+          resolve(false);
+      }, (error) => {
+        reject(error);
+      });
+      })
+    }
 
 }

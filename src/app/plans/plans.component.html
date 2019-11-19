@@ -1,0 +1,24 @@
+<h3 class="demo-title">Select a plan</h3>
+
+<div class="pricing-table">
+    <div class="pricing-option" *ngFor="let plan of plans">
+        <i class="material-icons">fastfood</i>
+        <h1>{{plan.name}}</h1>
+        <hr />
+        <p>{{plan.description}}</p>
+        <p>{{plan.per_meal_info}}</p>
+        <hr />
+        <div class="price">
+            <div class="front">
+                <span class="price">{{plan.price}} <!--<b>$</b>--></span>
+            </div>
+            <div class="back">
+                <a  (click)="selectPlan(plan)" class="button">Choose this plan</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pricing-table"> 
+    <p class="info">In the U.S. and Canada, tax and fees are additional.</p>
+    <p class="info">In most cases, the rate for tax & fees is the same as the local restaurant meal tax.</p>
+</div>

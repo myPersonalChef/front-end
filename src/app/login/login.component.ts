@@ -59,10 +59,25 @@ export class LoginComponent implements OnInit {
         console.log(data.fullName);
         this.dataSvc.changeMessage(data.fullName.split(" ")[0]);
         this.dataSvc.changeLoginStatus("loggedIn");
-        this.router.navigate(['/home']);
+        // this.router.navigate(['/plans']);
+
+        // if subscribed , go to home
+        // else show plans screen
+        this.authService.isSubscribed(res.user.uid)
+        .then((data) =>{
+          if(data){
+            this.router.navigate(['/home']);
+          }else{
+            this.router.navigate(['/plans']);
+          }
+        })
+        .catch(err =>{
+          console.log("Error while checking subscription...");
+        })
+
       })
       .catch((err)=>{
-
+        console.log("Error while login...");
       })
      
     }, err => {

@@ -12,6 +12,8 @@ export class AppService {
   editUserInfo: boolean = false;
   userId: string;
 
+  selectedPlanId: number;
+
   constructor(
     public http: HttpClient
   ) { }
@@ -40,6 +42,11 @@ export class AppService {
     return this.userId;
   }
 
+  setSelectedPlanId(planId: number){
+    this.selectedPlanId = planId;
+  }
 
-
+  getSelectedPlanId(): number {
+    return this.selectedPlanId;
+  }
 }

@@ -6,6 +6,8 @@ import {  AppService} from './core/app.service';
 
 import { Router } from '@angular/router';
 
+import { plans } from './core/const';
+
 
 @Component({
   selector: 'app-root',
@@ -23,10 +25,15 @@ export class AppComponent implements OnInit {
   constructor(private dataSvc: DataService, 
     private authService: AuthService,
     private service: AppService,
-    private router: Router) { }
+    private router: Router) {
+      if (!authService.isLoggedIn()) {
+        this.router.navigate(['/login']);
+      }
+    }
 
 
   ngOnInit() {
+    this.authService.createPlans(plans);
     this.dataSvc.currentMessage.subscribe(message => {
       if(message && message.length){
         this.userName = message;

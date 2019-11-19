@@ -21,6 +21,8 @@ import {  AngularFireDatabaseModule} from '@angular/fire/database';
 import { AuthService } from './core/auth.service';
 import { AppService } from './core/app.service';
 import { DataService } from './core/data.service';
+import { PlansComponent } from './plans/plans.component';
+import { PaymentComponent } from './payment/payment.component';
 
 
 const firebase = {
@@ -38,7 +40,9 @@ const firebase = {
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    HomeComponent
+    HomeComponent,
+    PlansComponent,
+    PaymentComponent
   ],
   imports: [
     BrowserModule,
