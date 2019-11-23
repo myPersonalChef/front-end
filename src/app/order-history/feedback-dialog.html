@@ -1,0 +1,11 @@
+<!-- <h1 mat-dialog-title>Hi {{data.name}}</h1> -->
+<div mat-dialog-content>
+  <p>Please provide your feedback</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.feedback">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data.feedback" cdkFocusInitial>Done</button>
+</div>

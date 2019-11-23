@@ -2,11 +2,14 @@ import { Injectable } from "@angular/core";
 //import 'rxjs/add/operator/toPromise';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
+import { AngularFireStorage } from '@angular/fire/storage';
 import * as firebase from 'firebase/app';
 
 import { User } from '../core/interfaces';
 import { resolve } from 'url';
 import { reject } from 'q';
+
+import { ORDER_STATUS } from '../core/const';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +18,8 @@ export class AuthService {
 
   constructor(
     public afAuth: AngularFireAuth,
-    public db: AngularFireDatabase
+    public db: AngularFireDatabase,
+    public storage: AngularFireStorage
   ) { 
 
    // this.db = firebase.database();
@@ -242,7 +246,7 @@ export class AuthService {
         Subscription_start_timestamp
         Subscription_end_timestamp
      */
-    addSubscription(planId: any, startDate: any, endDate: any){
+    addSubscription(planId: any, startDate: any, endDate: any, meals_avalilable: number){
       const userId = firebase.auth().currentUser.uid;
       return new Promise<any>((resolve, reject) => {
         this.db.database.ref('subscription/' + userId).set({
@@ -250,7 +254,8 @@ export class AuthService {
           user_id: userId,
           plan_id: planId,
           subscription_start_timestamp: startDate,
-          subscription_end_timestamp: endDate
+          subscription_end_timestamp: endDate,
+          meals_avalilable
         }).then((data) => {
           resolve(data);
         })
@@ -282,5 +287,236 @@ export class AuthService {
       });
       })
     }
+
+    createRecipes(recipes: any[]){
+        recipes.forEach((recipe, index)=>{
+            this.db.database.ref('recipes/' + recipe.recipe_id).set({
+              "publisher": recipe.publisher,
+              "f2f_url": recipe.f2f_url,
+              "title": recipe.title,
+              "source_url": recipe.source_url,
+              "recipe_id": recipe.recipe_id,
+              "image_url": recipe.image_url,
+              "social_rank": recipe.social_rank,
+              "publisher_url": recipe.publisher_url
+            });
+        });
+    }
+
+    /**
+     * Gets the recipes for searched term
+     * @param searchTerm 
+     */
+    getRecipesBySearchTerm(searchTerm: string){
+      const matchedRecipes = [];
+      return new Promise<any>((resolve, reject) => {
+        const recipesRef = this.db.database.ref('recipes');
+        recipesRef.on('value', (snapshot) =>{
+          snapshot.forEach((childSnapshot) => {
+            // console.log(childSnapshot.val()["title"].toUpperCase());
+            const title = childSnapshot.val()["title"].toUpperCase();
+            if(title.indexOf(searchTerm.toUpperCase()) > -1){
+              matchedRecipes.push(childSnapshot.val());
+            }
+          });
+          resolve(matchedRecipes);
+      }, (error) => {
+        reject(error);
+      });
+      });
+    }
+
+    /**
+     * Gets the download url for images stored in firebase storage
+     * @param imgId 
+     */
+    getStorageUrl(imgId: string){
+
+      return new Promise<any>((resolve, reject) => {
+        this.storage.storage.ref('recipe_images/'+imgId+'.jpg').getDownloadURL().then( url =>{
+          // console.log(url);
+          resolve(url);
+        }).catch((error)=> {
+          // If anything goes wrong while getting the download URL, log the error
+          console.error(error);
+          reject("");
+        });
+      });
+    }
+
+    addOrder(receipe_id: string){
+      const userId = firebase.auth().currentUser.uid;
+      const timestamp = new Date().valueOf();
+      return new Promise<any>((resolve, reject) => {
+        this.db.database.ref('orders/' + timestamp).set({
+            order_id: timestamp,
+            order_date: timestamp,
+            receipe_id,
+            ordered_by: userId,
+            delivery_address: "",
+            status: 0
+        }).then((data) => {
+          resolve(data);
+        })
+        .catch(err => {
+          reject(err);
+        });
+      });
+    }
+
+    updateAvailableMeals(){
+      // const updates = {};
+      const userId = firebase.auth().currentUser.uid;
+      // updates['/subscription/' + userId] = {meals_avalilable: 2};
+
+      
+
+      return new Promise<any>((resolve, reject) => {
+
+        this.db.database.ref('/subscription/' + userId).once('value', (snapshot) =>{
+         // snapshot.forEach((childSnapshot) => {
+            let meals_available = snapshot.val()["meals_avalilable"];
+            if(meals_available > 0){
+              meals_available = meals_available - 1;
+              
+              this.db.database.ref('/subscription/' + userId).update({meals_avalilable: meals_available})
+              .then(res=>{
+                resolve(res);
+              })
+              .catch(err=>{
+                reject(err);
+              });
+  
+  
+            }
+            //});
+          }, (error) => {
+          });
+      })
+    }
+
+    /**
+     * get the order history for user
+     * @param count 
+     */
+    getOrderHistory(count : number){
+      const ordersRef = this.db.database.ref('orders');
+      const recipeRef = this.db.database.ref('recipes');
+      const userId = firebase.auth().currentUser.uid;
+      const orderHistory = [];
+
+
+      return new Promise<any>((resolve, reject) => {
+
+        ordersRef.orderByChild("ordered_by").equalTo(userId).on("child_added", (snapshot)=> {
+          const recipe_id = snapshot.val().receipe_id;
+          const orderDetails = snapshot.val();
+          recipeRef.child(recipe_id).child('title').once('value', (mediaSnap) =>{
+            orderHistory.push({
+              ...orderDetails,
+              recipeName: mediaSnap.val()
+            });
+            if(count === orderHistory.length){
+              resolve(orderHistory);
+            }
+          });
+        });
+
+      });
+    }
+
+    /**
+     * gets the count of orders for user
+     */
+    getCount(){
+      const ordersRef = this.db.database.ref('orders');
+      const userId = firebase.auth().currentUser.uid;
+      let count = 0;
+      return new Promise<any>((resolve, reject) => {
+       
+        const ordersRef = this.db.database.ref('orders');
+        ordersRef.once('value', (snapshot) =>{
+          snapshot.forEach((childSnapshot) => {
+            const ordered_by = childSnapshot.val()["ordered_by"];
+            if( ordered_by === userId){
+              count++;
+            }
+          });
+          resolve(count);
+      }, (error) => {
+        reject(error);
+      });
+
+
+      });
+    }
+
+    postFeedback(recipe_id, feedback){
+      const userId = firebase.auth().currentUser.uid;
+      const timestamp = new Date().valueOf();
+      return new Promise<any>((resolve, reject) => {
+
+        this.db.database.ref('users').orderByKey().equalTo(userId).once('value', snapshot =>{
+          const user_name = snapshot.val()[userId].fullName;
+
+          this.db.database.ref('feedbacks/' + timestamp).set({
+            feedback_id: timestamp,
+            recipe_id: recipe_id,
+            feedback: feedback,
+            user_id: userId,
+            user_name: user_name,
+            date: timestamp
+          }).then((data) => {
+            resolve(data);
+          })
+          .catch(err => {
+            reject(err);
+          });
+        });
+      });
+    }
+
+    getOpenOrders(status: number = 0){
+      const orders = [];
+      return new Promise<any>((resolve, reject) => {
+        const ordersRef = this.db.database.ref('orders');
+        ordersRef.orderByChild('status').equalTo(status).once('value', (snapshot) =>{
+          snapshot.forEach((childSnapshot) => {
+           orders.push(childSnapshot.val());
+          });
+          resolve(orders);
+      }, (error) => {
+        reject(error);
+      });
+    });
+  }
+
+  getUsers(userType: number = 1){
+    const users = [];
+    return new Promise<any>((resolve, reject) => {
+      const ordersRef = this.db.database.ref('users');
+      ordersRef.orderByChild('userType').equalTo(userType).once('value', (snapshot) =>{
+        snapshot.forEach((childSnapshot) => {
+         users.push(childSnapshot.val());
+        });
+        resolve(users);
+    }, (error) => {
+      reject(error);
+    });
+  });
+}
+
+
+  updateOrderStatus(order_id: any, status){
+    return new Promise<any>((resolve, reject) => {   
+      this.db.database.ref('/orders/' + order_id).update({status: status})
+      .then(res=>{
+        resolve(res);
+      })
+      .catch(err=>{
+        reject(err);
+      });
+    })
+  }
 
 }

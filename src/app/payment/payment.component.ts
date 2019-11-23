@@ -35,16 +35,18 @@ export class PaymentComponent implements OnInit {
 
     
     let endDate = formatDate(new Date(), 'MM/dd/yyyy', 'en');
-
+    let meals_avalilable = -1;
     if(planId === 1){
       endDate = formatDate(new Date(date.setDate(date.getDate() + 7)), 'MM/dd/yyyy', 'en');
+      meals_avalilable = 3;
     }else if(planId === 2){
       endDate = formatDate(new Date(date.setMonth(date.getMonth() + 1)), 'MM/dd/yyyy', 'en');
+      meals_avalilable = 12;
     }
 
     // var newDate = new Date(date.setMonth(date.getMonth() + 1));
 
-    this.authSvc.addSubscription(planId, today, endDate)
+    this.authSvc.addSubscription(planId, today, endDate, meals_avalilable)
     .then(() =>{
       this.router.navigate(['/home']);
     })

@@ -295,15 +295,27 @@
   }
 </style>
 
+<div *ngIf="loggedIn">
+  <a *ngIf="userName === 'Admin'" [routerLink]="['/admin-portal']" href="javascript:void(0)" style="position: absolute;padding: 10px;color: #673ab7;">Home</a>
+  <a *ngIf="userName !== 'Admin'" [routerLink]="['/home']" href="javascript:void(0)" style="position: absolute;padding: 10px;color: #673ab7;">Home</a>
+
+</div>
 <div style="text-align: center; padding: 10px;  font-size: 20px;  font-weight: bold;">
   My Personal Chef
 </div>
+<!-- <div>
+  <a (click)="showContactPage()" class="contact-us">Contact Us</a>
+</div> -->
 <div class="dropdown" *ngIf="loggedIn">
   <button class="dropbtn">{{userName}} <i class="down"></i></button>
-  
-  <div class="dropdown-content">
+  <div class="dropdown-content" *ngIf="userName === 'Admin'">
+      <a href="javascript:void(0)" (click)="navigateToUserView()">Users</a>
+      <a href="javascript:void(0)" (click)="navigateToOrdersView()">Orders</a>
+      <a href="javascript:void(0)" (click)="signout()">Sign out</a>
+    </div>
+  <div class="dropdown-content" *ngIf="userName != 'Admin'">
     <a href="javascript:void(0)" (click)="modifyUserProfile()">Edit Profile</a>
-    <a href="javascript:void(0)">Link 2</a>
+    <a href="javascript:void(0)" (click)="showOrderHistory()">Order history</a>
     <a href="javascript:void(0)" (click)="signout()">Sign out</a>
   </div>
 </div>

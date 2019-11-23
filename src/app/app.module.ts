@@ -17,12 +17,18 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import {  AngularFireDatabaseModule} from '@angular/fire/database';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 import { AuthService } from './core/auth.service';
 import { AppService } from './core/app.service';
 import { DataService } from './core/data.service';
 import { PlansComponent } from './plans/plans.component';
 import { PaymentComponent } from './payment/payment.component';
+import { OrderHistoryComponent } from './order-history/order-history.component';
+import { DialogOverviewExampleDialog } from './order-history/order-history.component';
+import { AdminPortalComponent } from './admin-portal/admin-portal.component';
+import { AdminOrderViewComponent } from './admin-order-view/admin-order-view.component';
+import { AdminUserViewComponent } from './admin-user-view/admin-user-view.component';
 
 
 const firebase = {
@@ -42,8 +48,14 @@ const firebase = {
     RegisterComponent,
     HomeComponent,
     PlansComponent,
-    PaymentComponent
+    PaymentComponent,
+    OrderHistoryComponent,
+    DialogOverviewExampleDialog,
+    AdminPortalComponent,
+    AdminOrderViewComponent,
+    AdminUserViewComponent
   ],
+  entryComponents: [DialogOverviewExampleDialog],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -56,7 +68,7 @@ const firebase = {
    AngularFireDatabaseModule,
    HttpClientModule
   ],
-  providers: [AuthService, AppService, DataService],
+  providers: [AuthService, AppService, DataService, AngularFireStorage],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

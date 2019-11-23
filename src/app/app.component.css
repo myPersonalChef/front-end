@@ -67,3 +67,12 @@
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
   }
+
+  .contact-us{
+    float: right;
+    position: absolute;
+    top: 16px;
+    right: 100px;
+    cursor: pointer;
+    color: #673ab7;
+  }

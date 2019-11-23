@@ -57,6 +57,12 @@ export class LoginComponent implements OnInit {
       this.authService.getUserDetailsById(res.user.uid)
       .then((data: User)=>{
         console.log(data.fullName);
+        if(data.userType === 0){
+          this.dataSvc.changeMessage("Admin");
+          this.dataSvc.changeLoginStatus("loggedIn");
+          this.router.navigate(['/admin-portal']);
+          return;
+        }
         this.dataSvc.changeMessage(data.fullName.split(" ")[0]);
         this.dataSvc.changeLoginStatus("loggedIn");
         // this.router.navigate(['/plans']);

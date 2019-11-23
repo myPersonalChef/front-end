@@ -6,7 +6,7 @@ import {  AppService} from './core/app.service';
 
 import { Router } from '@angular/router';
 
-import { plans } from './core/const';
+import { plans, recipes } from './core/const';
 
 
 @Component({
@@ -26,14 +26,15 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private service: AppService,
     private router: Router) {
-      if (!authService.isLoggedIn()) {
-        this.router.navigate(['/login']);
-      }
+      // if (!authService.isLoggedIn()) {
+      //   this.router.navigate(['/login']);
+      // }
     }
 
 
   ngOnInit() {
-    this.authService.createPlans(plans);
+    // this.authService.createPlans(plans);
+    // this.authService.createRecipes(recipes);
     this.dataSvc.currentMessage.subscribe(message => {
       if(message && message.length){
         this.userName = message;
@@ -78,5 +79,20 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/register']);
   }
 
+  showContactPage(){
+    console.log("showContactPage...");
+  }
+
+  showOrderHistory(){
+    this.router.navigate(['/order-history']);
+  }
+
+  navigateToUserView(){
+    this.router.navigate(['/admin-users-view']);
+  }
+
+  navigateToOrdersView(){
+    this.router.navigate(['/admin-orders-view']);
+  }
 
 }
