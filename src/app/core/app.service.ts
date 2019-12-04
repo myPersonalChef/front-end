@@ -14,6 +14,9 @@ export class AppService {
 
   selectedPlanId: number;
 
+  userName:string;
+  userEmail: string;
+
   constructor(
     public http: HttpClient
   ) { }
@@ -21,6 +24,25 @@ export class AppService {
   fetchRecipes(query= "pasta"): Observable<any>{
        const url = `${environment.proxy}http://food2fork.com/api/search?key=${environment.key}&q=${query}`;
         return this.http.get(url);
+  }
+
+  sendEmail(emailId:string, fullName: string, recipeName: string, deliveryTime: any, orderId: string){
+    console.log("in sendEmail...");
+    this.http.post("http://localhost:3000/sendEmail", {
+      name: fullName,
+      email: emailId,
+      recipeName,
+      time: deliveryTime,
+      orderId
+    }).subscribe(
+      data =>{
+        console.log(data);
+      },err=>{
+        console.log(err);
+      }, ()=>{
+        console.log("something...");
+      }
+    );
   }
 
   /**
@@ -49,4 +71,21 @@ export class AppService {
   getSelectedPlanId(): number {
     return this.selectedPlanId;
   }
+
+  setUserName(userName: string){
+    this.userName = userName;
+  }
+
+  getUserName():string{
+    return this.userName;
+  }
+
+  setUserEmail(email:string){
+    this.userEmail = email;
+  }
+
+  getUserEmail():string{
+    return this.userEmail;
+  }
+  
 }

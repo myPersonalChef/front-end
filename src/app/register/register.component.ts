@@ -1,9 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 
 
 import { AuthService } from '../core/auth.service';
 import { AppService } from '../core/app.service';
+
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { DataService } from "../core/data.service";
+
+import { Router } from '@angular/router';
+
+
 
 
 @Component({
@@ -24,7 +31,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
   // email = '';
   // pwd = '';
 
-  constructor( public authService: AuthService, public service: AppService) { }
+  constructor( public authService: AuthService, public service: AppService,
+    public dialog: MatDialog,
+    public dataSvc: DataService,
+    public router: Router) { }
 
   ngOnInit() {
     if(this.service.getUserId() && this.service.isEditUserInfo()){
@@ -123,4 +133,50 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.service.updateEditUserFlag(false);
   }
 
+
+  deleteAccount(){
+    this.authService.deleteUserAccount()
+    .then(res =>{
+      this.dataSvc.changeLoginStatus("loggedOut");
+      this.router.navigate(['/login']);
+    })
+    .catch(err =>{
+      console.log(err);
+    })
+
+  }
+
+  openDialog(): void {
+    console.log("dialog...");
+   // console.log("Providing feedback for receipe id : " + recipe_id);
+    const dialogRef = this.dialog.open(DeleteAccountDialog, {
+      width: '250px',
+      data: { }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      if(result){
+        console.log("Trigger svc here...");
+        this.deleteAccount();
+        // this.feedback = result;
+        // this.provideFeedback(recipe_id, this.feedback);
+      }
+    });
+  }
+
+}
+
+@Component({
+  selector: 'dialog-overview-example-dialog',
+  templateUrl: 'deleteAccount-dialog.html',
+})
+export class DeleteAccountDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<DeleteAccountDialog>) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

@@ -12,6 +12,14 @@
 
 <div class="example-container">
     <div class="align-cards-center">
+        Order Status : 
+        <select (change)="filterChanged($event.target.value)" style="margin-bottom: 10px;">
+            <option selected  [value]=null>Select</option>
+            <option *ngFor="let status of statuses" [value]="status.value">{{status.text}}
+            </option>
+        </select>
+
+        <br/>
         <mat-card class="example-card" *ngFor="let order of orderHistory" >
             <mat-card-header style="background-color: lightgray;">
             <!-- <div mat-card-avatar class="example-header-image"></div> -->

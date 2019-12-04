@@ -36,4 +36,6 @@
 
     <button *ngIf="service.isEditUserInfo()" mat-button color="primary" (click)="modifyDetails()">Update</button>
 
+    <button *ngIf="service.isEditUserInfo()" mat-button color="secondary" (click)="openDialog()">Delete My Account</button>
+
   </div>

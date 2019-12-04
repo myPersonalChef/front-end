@@ -4,6 +4,8 @@ import { AuthService } from '../core/auth.service';
 
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
+import { ORDER_STATUS } from '../core/const';
+
 export interface DialogData {
   feedback: string;
 }
@@ -17,6 +19,7 @@ export class OrderHistoryComponent implements OnInit {
 
   feedback: string;
   // name: string;
+  statuses = ORDER_STATUS;
 
   orderHistory;
   constructor(public authSvc: AuthService,
@@ -29,10 +32,11 @@ export class OrderHistoryComponent implements OnInit {
     this.getOrders();
   }
 
-  getOrders(){
-    this.authSvc.getCount()
+  getOrders(status = null){
+    console.log(status , Number(status));
+    this.authSvc.getCount(status ? Number(status) : null)
     .then(count =>{
-      this.authSvc.getOrderHistory(count)
+      this.authSvc.getOrderHistory(count, status? Number(status): null)
       .then(data =>{
         console.log(data);
         data.sort((a, b) => (a.order_date < b.order_date) ? 1 : -1);
@@ -49,8 +53,10 @@ export class OrderHistoryComponent implements OnInit {
   }
 
   cancelOrder(orderId: any){
+    const time = new Date().valueOf();
+
     console.log("Canceling order id :" + orderId);
-    this.authSvc.updateOrderStatus(orderId, 3)
+    this.authSvc.updateOrderStatus(orderId, 3, time)
     .then(res => {
       console.log("Order " + orderId +" cancelled");
       this.getOrders();
@@ -88,6 +94,11 @@ export class OrderHistoryComponent implements OnInit {
     });
   }
 
+  filterChanged(data){
+    console.log(data);
+     this.getOrders(data);
+  }
+
 }
 
 @Component({
@@ -105,3 +116,5 @@ export class DialogOverviewExampleDialog {
   }
 
 }
+
+

@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent, DeleteAccountDialog } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -29,6 +29,8 @@ import { DialogOverviewExampleDialog } from './order-history/order-history.compo
 import { AdminPortalComponent } from './admin-portal/admin-portal.component';
 import { AdminOrderViewComponent } from './admin-order-view/admin-order-view.component';
 import { AdminUserViewComponent } from './admin-user-view/admin-user-view.component';
+import { UserPortalComponent } from './user-portal/user-portal.component';
+
 
 
 const firebase = {
@@ -53,9 +55,11 @@ const firebase = {
     DialogOverviewExampleDialog,
     AdminPortalComponent,
     AdminOrderViewComponent,
-    AdminUserViewComponent
+    AdminUserViewComponent,
+    UserPortalComponent,
+    DeleteAccountDialog
   ],
-  entryComponents: [DialogOverviewExampleDialog],
+  entryComponents: [DialogOverviewExampleDialog, DeleteAccountDialog],
   imports: [
     BrowserModule,
     AppRoutingModule,

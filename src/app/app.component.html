@@ -314,6 +314,7 @@
       <a href="javascript:void(0)" (click)="signout()">Sign out</a>
     </div>
   <div class="dropdown-content" *ngIf="userName != 'Admin'">
+    <a href="javascript:void(0)" [routerLink]="['/user-portal']">My Dashboard</a>
     <a href="javascript:void(0)" (click)="modifyUserProfile()">Edit Profile</a>
     <a href="javascript:void(0)" (click)="showOrderHistory()">Order history</a>
     <a href="javascript:void(0)" (click)="signout()">Sign out</a>

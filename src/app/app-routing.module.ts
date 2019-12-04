@@ -10,6 +10,7 @@ import { OrderHistoryComponent } from '../app/order-history/order-history.compon
 import { AdminPortalComponent } from '../app/admin-portal/admin-portal.component';
 import { AdminOrderViewComponent } from '../app/admin-order-view/admin-order-view.component';
 import {  AdminUserViewComponent } from '../app/admin-user-view/admin-user-view.component';
+import { UserPortalComponent } from '../app/user-portal/user-portal.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'order-history', component: OrderHistoryComponent},
   { path: 'admin-portal', component: AdminPortalComponent},
   { path: 'admin-orders-view', component: AdminOrderViewComponent},
-  { path: 'admin-users-view', component: AdminUserViewComponent}
+  { path: 'admin-users-view', component: AdminUserViewComponent},
+  { path: 'user-portal', component: UserPortalComponent}
 
 ];
 

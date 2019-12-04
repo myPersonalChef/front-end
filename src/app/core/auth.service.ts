@@ -140,7 +140,8 @@ export class AuthService {
               fullName: name,
               email: email,
               address: addresss,
-              contact: contact
+              contact: contact,
+              userType: 1
           }).then((res) => {
             resolve(res);
           })
@@ -354,7 +355,8 @@ export class AuthService {
             receipe_id,
             ordered_by: userId,
             delivery_address: "",
-            status: 0
+            status: 0,
+            updated_timestamp: timestamp
         }).then((data) => {
           resolve(data);
         })
@@ -399,7 +401,7 @@ export class AuthService {
      * get the order history for user
      * @param count 
      */
-    getOrderHistory(count : number){
+    getOrderHistory(count : number, status = null){
       const ordersRef = this.db.database.ref('orders');
       const recipeRef = this.db.database.ref('recipes');
       const userId = firebase.auth().currentUser.uid;
@@ -412,10 +414,20 @@ export class AuthService {
           const recipe_id = snapshot.val().receipe_id;
           const orderDetails = snapshot.val();
           recipeRef.child(recipe_id).child('title').once('value', (mediaSnap) =>{
-            orderHistory.push({
-              ...orderDetails,
-              recipeName: mediaSnap.val()
-            });
+            if(status != null){
+              if(status === orderDetails.status){
+                orderHistory.push({
+                  ...orderDetails,
+                  recipeName: mediaSnap.val()
+                });
+              }
+            }else{
+              orderHistory.push({
+                ...orderDetails,
+                recipeName: mediaSnap.val()
+              });
+            }
+              
             if(count === orderHistory.length){
               resolve(orderHistory);
             }
@@ -428,7 +440,7 @@ export class AuthService {
     /**
      * gets the count of orders for user
      */
-    getCount(){
+    getCount(status = null){
       const ordersRef = this.db.database.ref('orders');
       const userId = firebase.auth().currentUser.uid;
       let count = 0;
@@ -438,8 +450,14 @@ export class AuthService {
         ordersRef.once('value', (snapshot) =>{
           snapshot.forEach((childSnapshot) => {
             const ordered_by = childSnapshot.val()["ordered_by"];
-            if( ordered_by === userId){
-              count++;
+            if(status != null){
+              if( ordered_by === userId && status === childSnapshot.val()["status"]){
+                count++;
+              }
+            }else {
+              if( ordered_by === userId ){
+                count++;
+              }
             }
           });
           resolve(count);
@@ -476,13 +494,21 @@ export class AuthService {
       });
     }
 
-    getOpenOrders(status: number = 0){
+    getOpenOrders(status: number = 0, isAdmin: boolean = false){
+      const userId = firebase.auth().currentUser.uid;
+
       const orders = [];
       return new Promise<any>((resolve, reject) => {
         const ordersRef = this.db.database.ref('orders');
         ordersRef.orderByChild('status').equalTo(status).once('value', (snapshot) =>{
           snapshot.forEach((childSnapshot) => {
-           orders.push(childSnapshot.val());
+            if(isAdmin){
+              orders.push(childSnapshot.val());
+            }else{
+              if(userId === childSnapshot.val()["ordered_by"]){
+                orders.push(childSnapshot.val());
+              }
+            }
           });
           resolve(orders);
       }, (error) => {
@@ -504,12 +530,14 @@ export class AuthService {
       reject(error);
     });
   });
+
+  
 }
 
 
-  updateOrderStatus(order_id: any, status){
+  updateOrderStatus(order_id: any, status, timestamp?: any){
     return new Promise<any>((resolve, reject) => {   
-      this.db.database.ref('/orders/' + order_id).update({status: status})
+      this.db.database.ref('/orders/' + order_id).update({status: status, updated_timestamp: timestamp})
       .then(res=>{
         resolve(res);
       })
@@ -517,6 +545,85 @@ export class AuthService {
         reject(err);
       });
     })
+  }
+
+  getSubscriptionDetails(){
+     const userId = firebase.auth().currentUser.uid;
+    // const userId = "CrflNbyBolUHhToOm7FOvdV5nSy1";
+    return new Promise<any>((resolve, reject) => {
+      const subscriptionRef = this.db.database.ref('subscription');
+      subscriptionRef.orderByChild('user_id').equalTo(userId).once('value', (snapshot) =>{
+        snapshot.forEach((childSnapshot) => {
+         resolve(childSnapshot.val());
+        });
+    }, (error) => {
+      reject(error);
+    });
+  });
+  }
+
+  cancelSubscription(){
+    const userId = firebase.auth().currentUser.uid;
+    return new Promise<any>((resolve, reject) => {
+      const ref = this.db.database.ref('subscription');
+      ref.child(userId).remove()
+      .then(data => resolve())
+      .catch(err => reject());
+    });
+  }
+
+  /**
+   * Delete a user account
+   */
+  deleteUserAccount(){
+    this.deleteUserFromUserTable();
+    const user = firebase.auth().currentUser;
+    return new Promise<any>((resolve, reject) => {
+      user.delete().then(()=> {
+        // User deleted.
+        resolve();
+      }).catch((error)=> {
+        // An error happened.
+        reject();
+      });
+    });
+  }
+
+  deleteUserFromUserTable(){
+    const userId = firebase.auth().currentUser.uid;
+    return new Promise<any>((resolve, reject) => {
+      const ref = this.db.database.ref('users');
+      ref.child(userId).remove()
+      .then(data => resolve())
+      .catch(err => reject());
+    });
+  }
+
+  /**
+   * Get order details by id
+   * @param orderId 
+   */
+  getOrderDetailsById(orderId: string){
+    console.log("order id is... ", orderId);
+    return new Promise<any>((resolve, reject) => {
+      const orderRef = this.db.database.ref('orders');
+      orderRef.child(orderId).once('value', (snapshot) =>{
+        resolve(snapshot.val());
+      }, (error) => {
+        reject(error);
+    });
+  });
+  }
+
+  getRecipeDetailsById(recipeId: string){
+    return new Promise<any>((resolve, reject) => {
+      const reecipeRef = this.db.database.ref('recipes');
+      reecipeRef.child(recipeId).once('value', (snapshot) =>{
+        resolve(snapshot.val());
+      }, (error) => {
+        reject(error);
+    });
+  });
   }
 
 }

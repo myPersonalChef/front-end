@@ -23,7 +23,7 @@ export class AdminPortalComponent implements OnInit {
   }
 
   getOrders(){
-    this.authSvc.getOpenOrders()
+    this.authSvc.getOpenOrders(0 , true)
     .then(data =>{
       // console.log(data);
       // data.sort((a, b) => (a.order_date < b.order_date) ? 1 : -1);

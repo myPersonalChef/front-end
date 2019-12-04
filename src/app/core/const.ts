@@ -1,9 +1,28 @@
-export const ORDER_STATUS = {
-  0 :"placed",
-  1 :"in-progress",
-  2 : "delivered",
-  3 : "cancelled"
-};
+// export const ORDER_STATUS = {
+//   0 :"placed",
+//   1 :"in-progress",
+//   2 : "delivered",
+//   3 : "cancelled"
+// };
+
+export const ORDER_STATUS = [
+	{
+		value: 0,
+		text: "Placed"
+	},
+	{
+		value: 1,
+		text: "In-Progress"
+	},
+	{
+		value: 2,
+		text: "Delivered"
+	},
+	{
+		value: 3,
+		text: "Cancelled"
+	}
+];
 
 export const plans = [
     {
