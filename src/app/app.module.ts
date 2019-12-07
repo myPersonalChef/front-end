@@ -30,8 +30,10 @@ import { AdminPortalComponent } from './admin-portal/admin-portal.component';
 import { AdminOrderViewComponent } from './admin-order-view/admin-order-view.component';
 import { AdminUserViewComponent } from './admin-user-view/admin-user-view.component';
 import { UserPortalComponent } from './user-portal/user-portal.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
 
-
+import { SubscribeDialog } from './user-portal/user-portal.component';
 
 const firebase = {
   apiKey: "AIzaSyD3OGdpiol6we31SZmhvkjjDLDy_lYqy20",
@@ -57,9 +59,12 @@ const firebase = {
     AdminOrderViewComponent,
     AdminUserViewComponent,
     UserPortalComponent,
-    DeleteAccountDialog
+    DeleteAccountDialog,
+    LandingPageComponent,
+    ContactUsComponent,
+    SubscribeDialog
   ],
-  entryComponents: [DialogOverviewExampleDialog, DeleteAccountDialog],
+  entryComponents: [DialogOverviewExampleDialog, DeleteAccountDialog, SubscribeDialog],
   imports: [
     BrowserModule,
     AppRoutingModule,

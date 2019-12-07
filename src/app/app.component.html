@@ -296,16 +296,19 @@
 </style>
 
 <div *ngIf="loggedIn">
-  <a *ngIf="userName === 'Admin'" [routerLink]="['/admin-portal']" href="javascript:void(0)" style="position: absolute;padding: 10px;color: #673ab7;">Home</a>
-  <a *ngIf="userName !== 'Admin'" [routerLink]="['/home']" href="javascript:void(0)" style="position: absolute;padding: 10px;color: #673ab7;">Home</a>
-
+  <a *ngIf="userName === 'Admin'" [routerLink]="['/admin-portal']" href="javascript:void(0)" style="position: absolute;padding: 15px;color: #fff;">Home</a>
+  <a *ngIf="userName !== 'Admin'" [routerLink]="['/home']" href="javascript:void(0)" style="position: absolute;padding: 15px;color: #fff;">Home</a>
+  <a [routerLink]="['/contact-us']"  class="contact-us contact-us-loggedin" style="color: #fff;">Contact Us</a>
 </div>
-<div style="text-align: center; padding: 10px;  font-size: 20px;  font-weight: bold;">
+<div *ngIf="!loggedIn">
+  <a [routerLink]="['/contact-us']"  class="contact-us contact-us-notloggedin" style="color: #fff;">Contact Us</a>
+</div>
+
+<div style="text-align: center; padding: 10px;  font-size: 20px;  font-weight: bold; background-color: #FE4239;
+color: #FFF; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.4);">
   My Personal Chef
 </div>
-<!-- <div>
-  <a (click)="showContactPage()" class="contact-us">Contact Us</a>
-</div> -->
+
 <div class="dropdown" *ngIf="loggedIn">
   <button class="dropbtn">{{userName}} <i class="down"></i></button>
   <div class="dropdown-content" *ngIf="userName === 'Admin'">
@@ -321,12 +324,12 @@
   </div>
 </div>
 <div class="dropdown" *ngIf="!loggedIn">
-  <button class="dropbtn">Login</button>
+  <button class="dropbtn" (click)="navigateToLogin()">Login</button>
 </div>
-<hr/>
+<!-- <hr/> -->
 <div *ngIf="showLoader">
     <mat-progress-bar mode="query"></mat-progress-bar>
 </div>
-<hr/>
+<!-- <hr/> -->
 
 <router-outlet></router-outlet>

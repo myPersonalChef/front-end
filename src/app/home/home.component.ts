@@ -6,6 +6,8 @@ import {  AppService} from '../core/app.service';
 import { DataService } from '../core/data.service';
 import { AuthService } from '../core/auth.service';
 
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-home',
@@ -13,6 +15,7 @@ import { AuthService } from '../core/auth.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  displayOverlay: boolean = false;
   recipes = [];
 
   errorMessage: string = '';
@@ -21,7 +24,8 @@ export class HomeComponent implements OnInit {
 
   constructor(public service: AppService,
     public dataSvc: DataService,
-    public authSvc: AuthService) { }
+    public authSvc: AuthService,
+    public router: Router) { }
 
   ngOnInit() {
   }
@@ -73,20 +77,34 @@ export class HomeComponent implements OnInit {
   }
 
   placeOrder(recipe_id: string){
-    console.log(recipe_id);
-    this.authSvc.addOrder(recipe_id)
-    .then((data)=>{
-      console.log(data);
-      this.authSvc.updateAvailableMeals()
-      .then( data =>{
-        
-      })
-      .catch(err=>{
-
-      })
+    // this.displayOverlay = true;
+    this.authSvc.getAvailableMeals()
+    .then(res=>{
+      if(res > 0){
+        console.log(recipe_id);
+        this.authSvc.addOrder(recipe_id)
+        .then((data)=>{
+          console.log(data);
+          this.authSvc.updateAvailableMeals()
+          .then( data =>{
+            console.log("Available Meals updates");
+            // this.displayOverlay = false;
+            alert("Your order is placed.");
+          })
+          .catch(err=>{
+            // this.displayOverlay = false;
+          })
+        })
+        .catch(err=>{
+          console.log(err);
+          // this.displayOverlay = false;
+        })
+      }else{
+        this.displayOverlay = true;
+      }
     })
     .catch(err=>{
-      console.log(err);
-    })
+
+    });
   }
 }

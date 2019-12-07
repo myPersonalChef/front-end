@@ -95,4 +95,8 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/admin-orders-view']);
   }
 
+  navigateToLogin(){
+    this.router.navigate(['/login']);
+  }
+
 }

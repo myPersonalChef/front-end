@@ -15,7 +15,8 @@
 
   .example-card {
     max-width: 400px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    padding: 0px;
   }
   
   .example-header-image {
@@ -106,36 +107,11 @@
   margin-bottom: 15px;
 }
 
-#overlay {
-  position: fixed; /* Sit on top of the page content */
-  display: block; /* Hidden by default */
-  width: 100%; /* Full width (cover the whole page) */
-  height: 100%; /* Full height (cover the whole page) */
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-  cursor: pointer; /* Add a pointer on hover */
+.mat-card-content{
+    padding-bottom: 10px;
 }
 
-#text{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  font-size: 20px;
-  color: white;
-  transform: translate(-50%,-50%);
-  -ms-transform: translate(-50%,-50%);
-}
-
-#text2{
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  font-size: 20px;
-  color: white;
-  transform: translate(-50%,-50%);
-  -ms-transform: translate(-50%,-50%);
+.mat-card-title{
+    padding: 10px 0px !important;
+    margin-bottom: 0px !important;
 }

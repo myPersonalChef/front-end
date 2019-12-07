@@ -37,4 +37,10 @@
           </mat-card-actions>
         </mat-card>
 </div>
+<div id="overlay" *ngIf="displayOverlay">
+    <div id="text">You do not have sufficient meals available to place this order.</div>
+    <a id="text2" [routerLink]="['/plans']" style="color: #fff;">Subscribe</a>
+</div>
+
+
 

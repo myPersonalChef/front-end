@@ -69,10 +69,21 @@
   }
 
   .contact-us{
-    float: right;
+    float: left;
     position: absolute;
-    top: 16px;
-    right: 100px;
+    /* top: 16px; */
+    /* right: 100px; */
     cursor: pointer;
-    color: #673ab7;
+    color: #fff;
+    padding: 15px 0px;
   }
+
+  .contact-us-loggedin{
+    left: 50px;
+    padding-left: 10px;
+  }
+
+  .contact-us-notloggedin{
+    left: 10px;
+  }
+

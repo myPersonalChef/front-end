@@ -1,0 +1,12 @@
+<!-- <h1 mat-dialog-title>Hi {{data.name}}</h1> -->
+<div mat-dialog-content>
+  <p>You Do not have enough meals left to place another order. </p>
+  <p>Would you like to subscribe ?</p>
+  <!-- <mat-form-field>
+    <input matInput [(ngModel)]="data.feedback">
+  </mat-form-field> -->
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Yes</button>
+</div>

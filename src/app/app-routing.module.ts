@@ -11,9 +11,13 @@ import { AdminPortalComponent } from '../app/admin-portal/admin-portal.component
 import { AdminOrderViewComponent } from '../app/admin-order-view/admin-order-view.component';
 import {  AdminUserViewComponent } from '../app/admin-user-view/admin-user-view.component';
 import { UserPortalComponent } from '../app/user-portal/user-portal.component';
+import { LandingPageComponent } from '../app/landing-page/landing-page.component';
+import { ContactUsComponent } from '../app/contact-us/contact-us.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'landing-page', pathMatch: 'full' },
+  {path: 'landing-page', component: LandingPageComponent},
+  {path: 'contact-us', component: ContactUsComponent},
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent},

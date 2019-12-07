@@ -626,4 +626,21 @@ export class AuthService {
   });
   }
 
+  /**
+   * Returns the available meals for user
+   * @param subscriptionId 
+   */
+  getAvailableMeals(){
+    const userId = firebase.auth().currentUser.uid;
+
+    return new Promise<any>((resolve, reject) => {
+      const subRef = this.db.database.ref('subscription');
+      subRef.child(userId).once('value', (snapshot) =>{
+        resolve(snapshot.val()["meals_avalilable"]);
+      }, (error) => {
+        reject(error);
+      });
+    });
+  }
+
 }

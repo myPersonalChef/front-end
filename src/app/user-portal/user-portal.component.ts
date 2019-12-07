@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { DataService } from "../core/data.service";
 
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 
 @Component({
@@ -99,7 +100,20 @@ console.log(date , endDate);
   }
 
   navigateToHome(){
-    this.router.navigate(['/home']);
+    this.authSvc.getAvailableMeals()
+    .then(res =>{
+      console.log(res , typeof res);
+      if(res > 0){
+        this.router.navigate(['/home']);
+      }else{
+        // show pop up for subscription
+        alert("You do not have enough meals left to place this order. Please subscribe.");
+      }
+    })
+    .catch(err=>{
+      console.log(err);
+    })
+    
   }
 
   navigateToSubscrpitions(){
@@ -135,4 +149,18 @@ console.log(date , endDate);
   }
 
 
+}
+
+@Component({
+  selector: 'subscribe-overview-example-dialog',
+  templateUrl: 'subscribeHelp-dialog.html',
+})
+export class SubscribeDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<SubscribeDialog>) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

@@ -106,3 +106,8 @@
 .mat-card-header{
   margin-bottom: 15px;
 }
+
+.mat-card-title{
+  padding: 10px 0px !important;
+  margin-bottom: 0px !important;
+}
